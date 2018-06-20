@@ -33,8 +33,6 @@ def processRequest(req):
     if req.get("result").get("action") != "yahooWeatherForecast":
         return {}
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
-    parameters = result.get("parameters")
-    city = parameters.get("geo-city")
     yql_query = makeYqlQuery(req)
     print ("yql query created")
     if yql_query is None:
@@ -56,9 +54,12 @@ def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
+    day=parameters.get("date")
     if city is None:
         return None
-    return "select item.forecast from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "') u='c' limit 3"
+
+    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
+    return "select item.forecast.high, item.forecast.low,item.forecast.date from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.date=' day ') limit 1"
 
 def makeWebhookResult(data):
     query = data.get('query')
@@ -74,19 +75,19 @@ def makeWebhookResult(data):
         return {}
 
     item = channel.get('item')
-    location = channel.get('location')
-    units = channel.get('units')
-    if (location is None) or (item is None) or (units is None):
+    #location = channel.get('location')
+    #units = channel.get('units')
+    if (item is None):
         return {}
 
-    condition = item.get('condition')
-    if condition is None:
-        return {}
+    forecast = item.get('forecast')
+    #if condition is None:
+    #    return {}
 
     # print(json.dumps(item, indent=4))
 
-    speech = "Today ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('high') + " " + units.get('temperature')
+    speech = "Today in "  ": " + forecast.get('high') + \
+             ", the temperature is " + forecast.get('low') + " " + forecast.get('text')
 
     print("Response:")
     print(speech)
