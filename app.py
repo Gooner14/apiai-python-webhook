@@ -40,7 +40,7 @@ def processRequest(req):
     	a=forecast.text
     	b=forecast.date
     	c=forecast.high
-   		d=forecast.low
+    	d=forecast.low
     day=parameters.get("date")
     yql_query = makeYqlQuery(req)
     print ("yql query created")
