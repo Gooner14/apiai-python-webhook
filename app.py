@@ -22,7 +22,7 @@ def webhook():
     res = processRequest(req)
 
     res = json.dumps(res, indent=4)
-    print(res)
+    #print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -47,7 +47,7 @@ def processRequest(req):
 
     data = json.loads(result)
     res = makeWebhookResult(data)
-    print(res)
+    #print(res)
     return res
 
 
@@ -59,7 +59,7 @@ def makeYqlQuery(req):
     if city is None:
         return None
 
-    return "select item.forecast from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') limit 1"
+    return "select * from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') limit 1"
 
 def makeWebhookResult(data):
     query = data.get('query')
