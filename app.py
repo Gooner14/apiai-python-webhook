@@ -107,8 +107,8 @@ def makeWebhookResult1(data):
     forecast=item.get('forecast')   
     # print(json.dumps(item, indent=4))
 
-    speech = "Today in " + location.get('city') + ": " + forecast.get('high') + \
-             ", the temperature is " + forecast.get('low') + " " + forecast.get('text')
+    speech = "Weather in " + location.get('city') + "on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') + \
+             " and a low of " + forecast.get('low')
 
     print("Response:")
     print(speech)
