@@ -33,7 +33,14 @@ def processRequest(req):
     if req.get("result").get("action") != "yahooWeatherForecast":
         return {}
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
-    yql_query = makeYqlQuery(req)
+    result = req.get("result")
+    parameters = result.get("parameters")
+    city = parameters.get("geo-city")
+    day=parameters.get("dat")
+    if day is None:
+        yql_query = makeYqlQuery2(req)
+    else:    
+        yql_query = makeYqlQuery1(req)
     print ("yql query created")
     if yql_query is None:
         print("yqlquery is empty")
@@ -46,22 +53,34 @@ def processRequest(req):
     print(result)
 
     data = json.loads(result)
-    res = makeWebhookResult(data)
+    if day is None:
+        res = makeWebhookResult2(data)
+    else:
+        res = makeWebhookResult1(data)
     return res
 
 
-def makeYqlQuery(req):
+def makeYqlQuery1(req):
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
     day=parameters.get("dat")
     if city is None:
-        return None
-
+        return None    
     #return "select * from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') limit 1"
     return "select units,location,title, lastBuildDate,description,ttl,link, wind, atmosphere, astronomy, image, item.link,item.lat,item.long,item.pubDate, item.forecast,item.language, item.title,item.condition,item.description,item.guid from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') limit 1"
 
-def makeWebhookResult(data):
+
+def makeYqlQuery2(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    city = parameters.get("geo-city")
+    if city is None:
+        return None
+
+    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
+
+def makeWebhookResult1(data):
     query = data.get('query')
     if query is None:
         return {}
@@ -160,6 +179,105 @@ def makeWebhookResult(data):
         # "contextOut": [],
         "source": "apiai-weather-webhook-sample"
     }
+
+def makeWebhookResult2(data):
+    query = data.get('query')
+    if query is None:
+        return {}
+
+    result = query.get('results')
+    if result is None:
+        return {}
+
+    channel = result.get('channel')
+    if channel is None:
+        return {}
+
+    item = channel.get('item')
+    location = channel.get('location')
+    units = channel.get('units')
+    if (location is None) or (item is None) or (units is None):
+        return {}
+
+    condition = item.get('condition')
+    if condition is None:
+        return {}
+
+    # print(json.dumps(item, indent=4))
+
+    speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
+             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+
+    print("Response:")
+    print(speech)
+
+    slack_message = {
+        "text": speech,
+        "attachments": [
+            {
+                "title": channel.get('title'),
+                "title_link": channel.get('link'),
+                "color": "#36a64f",
+
+                "fields": [
+                    {
+                        "title": "Condition",
+                        "value": "Temp " + condition.get('temp') +
+                                 " " + units.get('temperature'),
+                        "short": "false"
+                    },
+                    {
+                        "title": "Wind",
+                        "value": "Speed: " + channel.get('wind').get('speed') +
+                                 ", direction: " + channel.get('wind').get('direction'),
+                        "short": "true"
+                    },
+                    {
+                        "title": "Atmosphere",
+                        "value": "Humidity " + channel.get('atmosphere').get('humidity') +
+                                 " pressure " + channel.get('atmosphere').get('pressure'),
+                        "short": "true"
+                    }
+                ],
+
+                "thumb_url": "http://l.yimg.com/a/i/us/we/52/" + condition.get('code') + ".gif"
+            }
+        ]
+    }
+
+    facebook_message = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "generic",
+                "elements": [
+                    {
+                        "title": channel.get('title'),
+                        "image_url": "http://l.yimg.com/a/i/us/we/52/" + condition.get('code') + ".gif",
+                        "subtitle": speech,
+                        "buttons": [
+                            {
+                                "type": "web_url",
+                                "url": channel.get('link'),
+                                "title": "View Details"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+
+    print(json.dumps(slack_message))
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {"slack": slack_message, "facebook": facebook_message},
+        # "contextOut": [],
+        "source": "apiai-weather-webhook-sample"
+    }
+
 
 
 if __name__ == '__main__':
