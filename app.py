@@ -37,7 +37,7 @@ def processRequest(req):
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
     day=parameters.get("dat")
-    if day is "":
+    if len(day) <3:
         yql_query = makeYqlQuery2(req)
     else:    
         yql_query = makeYqlQuery1(req)
@@ -53,7 +53,7 @@ def processRequest(req):
     print(result)
 
     data = json.loads(result)
-    if day is "":
+    if len(day) < 3:
         res = makeWebhookResult2(data)
     else:
         res = makeWebhookResult1(data)
