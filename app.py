@@ -35,8 +35,16 @@ def processRequest(req):
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
     result = req.get("result")
     parameters = result.get("parameters")
+    f = urllib2.urlopen('http://freegeoip.net/json/')
+    json_string = f.read()
+    f.close()
+    location = json.loads(json_string)
+    print(location)
+    location_city = location['city']
     city = parameters.get("geo-city")
     day=parameters.get("dat")
+    if len(city)<3:
+        city=location_city
     if len(day) <3:
         yql_query = makeYqlQuery2(req)
     else:    
