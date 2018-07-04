@@ -35,14 +35,14 @@ def processRequest(req):
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
     result = req.get("result")
     parameters = result.get("parameters")
-    import ipgetter
-    import requests
+    #import ipgetter
+    #import requests
 
     #IP = ipgetter.myip()
     #url = 'http://freegeoip.net/json/'+IP
     #r = requests.get(url)
     #js = r.json()
-    #city = parameters.get("geo-city")
+    city = parameters.get("geo-city")
     day=parameters.get("dat")
     #if len(city)<3:
     #    city=js['city']
