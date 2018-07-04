@@ -38,14 +38,14 @@ def processRequest(req):
     import ipgetter
     import requests
 
-    IP = ipgetter.myip()
-    url = 'http://freegeoip.net/json/'+IP
-    r = requests.get(url)
-    js = r.json()
-    city = parameters.get("geo-city")
+    #IP = ipgetter.myip()
+    #url = 'http://freegeoip.net/json/'+IP
+    #r = requests.get(url)
+    #js = r.json()
+    #city = parameters.get("geo-city")
     day=parameters.get("dat")
-    if len(city)<3:
-        city=js['city']
+    #if len(city)<3:
+    #    city=js['city']
     if len(day) <3:
         yql_query = makeYqlQuery2(req)
     else:    
