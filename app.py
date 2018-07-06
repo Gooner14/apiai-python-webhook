@@ -43,9 +43,9 @@ def processRequest(req):
     #url = 'http://freegeoip.net/json/'+IP
     #r = requests.get(url)
     #js = r.json()
-    city = parameters.get("geo-city")
-    print("city is")
-    print(city)
+    #city = parameters.get("geo-city")
+    #print("city is")
+    #print(city)
     day=parameters.get("dat")
     if len(city)<3:
         newlink = "https://api.ipdata.co/city?api-key=1ad57590c9de8df36fae6f8693b934d2ca8d6228e6f5f5ab8e7cc6b7"
