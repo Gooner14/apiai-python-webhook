@@ -53,11 +53,12 @@ def processRequest(req):
         """g = geocoder.ip('me')
         print(g.city)
         city=g.city"""
-        send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json/"
+        send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json/%s" request.remote_addr
         geo_req = requests.get(send_url)
         geo_json = json.loads(geo_req.text)
         city = geo_json['city']
         print (city)
+    app.wsgi_app = ProxyFix(app.wsgi_app)    
     if len(day) <3:
         yql_query = makeYqlQuery2(req,city)
     else:    
