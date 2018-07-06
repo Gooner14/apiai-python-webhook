@@ -1,2 +1,5 @@
 Flask==0.10.1
 requests==2.5.3
+geocode==1.38.1
+ratelim==0.1.6
+future==0.16.0
