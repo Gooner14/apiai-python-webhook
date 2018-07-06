@@ -53,9 +53,9 @@ def processRequest(req):
         city=newf.text
         print (city)
     if len(day) <3:
-        yql_query = makeYqlQuery2(req)
+        yql_query = makeYqlQuery2(req,city)
     else:    
-        yql_query = makeYqlQuery1(req)
+        yql_query = makeYqlQuery1(req,city)
     print ("yql query created")
     if yql_query is None:
         print("yqlquery is empty")
@@ -69,16 +69,18 @@ def processRequest(req):
 
     data = json.loads(result)
     if len(day) < 3:
-        res = makeWebhookResult2(data)
+        res = makeWebhookResult2(data,city)
     else:
-        res = makeWebhookResult1(data)
+        res = makeWebhookResult1(data,city)
     return res
 
 
-def makeYqlQuery1(req):
+def makeYqlQuery1(req,city):
     result = req.get("result")
     parameters = result.get("parameters")
-    city = parameters.get("geo-city")
+    #city = parameters.get("geo-city")
+    print("in makeyqlquery")
+    print(city)
     day=parameters.get("dat")
     if city is None:
         return None    
@@ -86,16 +88,16 @@ def makeYqlQuery1(req):
     return "select units,location,title, lastBuildDate,description,ttl,link, wind, atmosphere, astronomy, image, item.link,item.lat,item.long,item.pubDate, item.forecast,item.language, item.title,item.condition,item.description,item.guid from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') and u =' c' limit 1"
 
 
-def makeYqlQuery2(req):
+def makeYqlQuery2(req,city):
     result = req.get("result")
     parameters = result.get("parameters")
-    city = parameters.get("geo-city")
+    #city = parameters.get("geo-city")
     if city is None:
         return None
 
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "') and u= ' c'"
 
-def makeWebhookResult1(data):
+def makeWebhookResult1(data,city):
     query = data.get('query')
     if query is None:
         return {}
@@ -195,7 +197,7 @@ def makeWebhookResult1(data):
         "source": "apiai-weather-webhook-sample"
     }
 
-def makeWebhookResult2(data):
+def makeWebhookResult2(data,city):
     query = data.get('query')
     if query is None:
         return {}
