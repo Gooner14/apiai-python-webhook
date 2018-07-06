@@ -47,12 +47,9 @@ def processRequest(req):
     city = parameters.get("geo-city")
     day=parameters.get("dat")
     if len(city)<3:
-        """newlink = "https://api.ipdata.co/city?api-key=1ad57590c9de8df36fae6f8693b934d2ca8d6228e6f5f5ab8e7cc6b7"
+        newlink = "https://api.ipdata.co/city?api-key=1ad57590c9de8df36fae6f8693b934d2ca8d6228e6f5f5ab8e7cc6b7"
         newf = requests.get(newlink)
-        city=newf.text"""
-        #fjvjnjvn
-        ge = geocoder.ip('me')
-        city = (ge.city)
+        city=newf.text
         print (city)
     if len(day) <3:
         yql_query = makeYqlQuery2(req,city)
