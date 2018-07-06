@@ -43,6 +43,8 @@ def processRequest(req):
     #r = requests.get(url)
     #js = r.json()
     city = parameters.get("geo-city")
+    print("city is")
+    print(city)
     day=parameters.get("dat")
     #if len(city)<3:
     #    city=js['city']
