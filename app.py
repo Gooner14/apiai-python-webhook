@@ -50,9 +50,13 @@ def processRequest(req):
         """newlink = "https://api.ipdata.co/city?api-key=1ad57590c9de8df36fae6f8693b934d2ca8d6228e6f5f5ab8e7cc6b7"
         newf = requests.get(newlink)
         city=newf.text"""
-        g = geocoder.ip('me')
+        """g = geocoder.ip('me')
         print(g.city)
-        city=g.city
+        city=g.city"""
+        send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json/"
+        geo_req = requests.get(send_url)
+        geo_json = json.loads(geo_req.text)
+        city = geo_json['city']
         print (city)
     if len(day) <3:
         yql_query = makeYqlQuery2(req,city)
