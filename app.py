@@ -64,7 +64,7 @@ def processRequest(req):
     #app.wsgi_app = ProxyFix(app.wsgi_app)       
     lati=str(lati)
     longi=str(longi)
-    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf&fields=breezometer_aqi"+"&format=json"
+    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf"+"&format=json"
     print(aqi_url)
     result = urllib.urlopen(aqi_url).read()
     aqi_req = requests.get(aqi_url)
@@ -79,8 +79,13 @@ def processRequest(req):
 
 def makeWebhookResult2(data):
     # aqi=data.get('breezometer_aqi')
-    print(data.get('breezometer_aqi'))
-    speech = "Today in " + data.get('breezometer_aqi')
+    print(json.dumps(item, indent=4))
+
+
+
+    speech = data.get('breezometer_description')+" with Air quality index of " + data.get('breezometer_aqi')
+
+    
 
     print("Response:")
     print(speech)
