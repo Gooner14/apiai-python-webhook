@@ -81,11 +81,13 @@ def makeWebhookResult2(data):
     # aqi=data.get('breezometer_aqi')
     print(json.dumps(item, indent=4))
 
+    recommendations=data.get('random_recommendations')
+    dom=data.get('dominant_pollutant_canonical_name')
 
-
-    speech = data.get('breezometer_description')+" with Air quality index of " + data.get('breezometer_aqi')
-
+    speech = data.get('dominant_pollutant_text')+" with Air quality index of "
     
+
+
 
     print("Response:")
     print(speech)
