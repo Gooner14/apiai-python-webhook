@@ -10,10 +10,6 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
-from urllib.parse import urlparse, urlencode
-from urllib.request import urlopen, Request
-from urllib.error import HTTPError  
-
 # Flask app should start in global layout
 app = Flask(__name__)
 
