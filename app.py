@@ -248,7 +248,7 @@ def makeWebhookResult2(data,city):
     print("Response:")
     print(speech)
     
-        slack_message = {
+      slack_message = {
         "text": speech,
         "attachments": [
             {
