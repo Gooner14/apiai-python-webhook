@@ -52,23 +52,16 @@ def processRequest(req):
     """g = geocoder.ip('me')
     print(g.city)
     city=g.city"""
-    send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json"
-    geo_req = requests.get(send_url)
-    geo_json = json.loads(geo_req.text)
-    city = geo_json['city']
-    lati=geo_json['latitude']
-    longi=geo_json['longitude']
-    print(json.dumps(geo_json, indent=4))
-    print(lati)
-    print(longi)
-    print (city)
+    lati=22.242525
+    longi=77.45435
+
     #app.wsgi_app = ProxyFix(app.wsgi_app)       
     lati=str(lati)
     longi=str(longi)
-    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf"+"&format=json"
+    aqi_url="http://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf"+"&format=json"
+    
     print(aqi_url)
     result = urllib.urlopen(aqi_url).read()
-    aqi_req = requests.get(aqi_url)
     print("aqi result: ")
     print(result)
 
@@ -82,11 +75,15 @@ def makeWebhookResult2(data):
     # aqi=data.get('breezometer_aqi')
     #print(json.dumps(data, indent=4))
     print(data.get('breezometer_aqi'))
-    print(data.get('random_recommendations'))
+    [item.encode('utf-8') for item in data]
+    print(data['random_recommendations'])
 
     recommendations=data['random_recommendations']
+    [item.encode('utf-8') for item in recommendations]
     dom=data['dominant_pollutant_text']
+    [item.encode('utf-8') for item in dom]
     print(dom)
+    print(data.get('breezometer_aqi'))
     print(json.dumps(data, indent=4))
 
     speech = "abcd in "+ data['breezometer_aqi'] + " with Air quality index of "
@@ -110,7 +107,7 @@ def makeWebhookResult2(data):
         "displayText": speech,
         "data": {"slack": slack_message},
         # "contextOut": [],
-        "source": "apiai-pollution"
+        "source": "webhook"
     }
     
     
