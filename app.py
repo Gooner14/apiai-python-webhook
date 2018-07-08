@@ -248,8 +248,6 @@ def makeWebhookResult2(data,city):
     print("Response:")
     print(speech)
 
-}
-
     return {
         "speech": speech,
         "displayText": speech,
