@@ -10,6 +10,10 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
+from urllib.parse import urlparse, urlencode
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError  
+
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -62,28 +66,19 @@ def processRequest(req):
     print(longi)
     print (city)
     #app.wsgi_app = ProxyFix(app.wsgi_app)       
-    
-    res = makeWebhookResult2(city,lati,longi)
-    #res = makeWebhookResult1(data,city)
-    return res
-
-def pollevel(lati, longi):
     lati=str(lati)
     longi=str(longi)
     aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf&fields=breezometer_aqi"
     aqi_req = requests.get(aqi_url)
-    aqi_json = json.loads(aqi_req.text)
-    aqi=aqi = aqi_json['breezometer_aqi']
-    return aqi
-
-def makeWebhookResult2(city,lati,longi):
+    data= json.loads(aqi_req.text)
+    res = makeWebhookResult2(data)
+    #res = makeWebhookResult1(data,city)
+    return res
     
-    aqi= pollevel(lati,longi)
 
-    print("aqi is")
-    print(aqi)
-
-    speech = "Today in " + aqi
+def makeWebhookResult2(data):
+   # aqi=data.get('breezometer_aqi')
+    speech = "Today in " + data.get('breezometer_aqi')
 
     print("Response:")
     print(speech)
@@ -101,7 +96,7 @@ def makeWebhookResult2(city,lati,longi):
         "displayText": speech,
         "data": {"slack": slack_message},
         # "contextOut": [],
-        "source": "apiai-weather-webhook-sample"
+        "source": "apiai-pollution"
     }
     
     
