@@ -242,7 +242,7 @@ def makeWebhookResult2(data,city):
     # print(json.dumps(item, indent=4))
 
     speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+             ", the temperature is " + condition.get('temp') + " " + units.get('temperature') + " aqi is "
 
     print("Response:")
     print(speech)
