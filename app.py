@@ -206,6 +206,14 @@ def makeWebhookResult1(data,city):
         "source": "apiai-weather-webhook-sample"
     }
 
+def pollevel(lati, longi):
+    lati=str(lati)
+    longi=str(longi)
+    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf&fields=breezometer_aqi"
+    aqi_req = requests.get(aqi_url)
+    aqi_json = json.loads(aqi_req.text)
+    aqi=aqi = aqi_json['breezometer_aqi']
+    return aqi
 def makeWebhookResult2(data,city):
     query = data.get('query')
     if query is None:
@@ -223,9 +231,10 @@ def makeWebhookResult2(data,city):
     lati=item.get('lat')
     longi=item.get('long')
     
-    #aqi = aqi_json['breezometer_aqi']
-    #print("aqi is")
-    #print(aqi)
+    aqi= pollevel(lati,longi)
+
+    print("aqi is")
+    print(aqi)
     location = channel.get('location')
     units = channel.get('units')
     if (location is None) or (item is None) or (units is None):
@@ -235,12 +244,8 @@ def makeWebhookResult2(data,city):
     if condition is None:
         return {}
     
-    lati=str(lati)
-    longi=str(longi)
-    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf&fields=breezometer_aqi"
-    aqi_req = requests.get(aqi_url)
-    aqi_json = json.loads(aqi_req.text)
-    # print(json.dumps(item, indent=4))
+    
+    #print(json.dumps(item, indent=4))
 
     speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
