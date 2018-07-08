@@ -130,6 +130,8 @@ def makeWebhookResult1(data,city):
 
     forecast=item.get('forecast')   
     # print(json.dumps(item, indent=4))
+    
+    
 
     speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +" "+units.get('temperature')+ \
              " and a low of " + forecast.get('low') +" "+ units.get('temperature')
@@ -218,6 +220,16 @@ def makeWebhookResult2(data,city):
         return {}
 
     item = channel.get('item')
+    lati=item.get('lat')
+    longi=item.get('long')
+    lati=str(lati)
+    longi=str(longi)
+    aqi_url="https://api.breezometer.com/baqi/?lat="+lati+"&lon="+longi+"&key=e89840e7891c4a81a95e10156c1d9dcf&fields=breezometer_aqi"
+    aqi_req = requests.get(aqi_url)
+    aqi_json = json.loads(aqi_req.text)
+    aqi = aqi_json['breezometer_aqi']
+    print("aqi is")
+    print(aqi)
     location = channel.get('location')
     units = channel.get('units')
     if (location is None) or (item is None) or (units is None):
@@ -226,11 +238,11 @@ def makeWebhookResult2(data,city):
     condition = item.get('condition')
     if condition is None:
         return {}
-
+    
     # print(json.dumps(item, indent=4))
 
     speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+             ", the temperature is " + condition.get('temp') + " " + units.get('temperature') + " Air quality index is "+ aqi
 
     print("Response:")
     print(speech)
