@@ -80,15 +80,16 @@ def processRequest(req):
 
 def makeWebhookResult2(data):
     # aqi=data.get('breezometer_aqi')
-    print(json.dumps(data, indent=4))
+    #print(json.dumps(data, indent=4))
     print(data.get('breezometer_aqi'))
     print(data.get('random_recommendations'))
 
-    recommendations=data.get('random_recommendations')
-    dom=data.get('dominant_pollutant_text')
+    recommendations=data['random_recommendations']
+    dom=data['dominant_pollutant_text']
     print(dom)
+    print(json.dumps(data, indent=4))
 
-    speech = dom.get('main')+" with Air quality index of "
+    speech = "abcd in "+ data['breezometer_aqi'] + " with Air quality index of "
 
 
 
