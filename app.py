@@ -35,8 +35,8 @@ def processRequest(req):
     if req.get("result").get("action") != "PollForecast":
         return {}
     #baseurl = "https://query.yahooapis.com/v1/public/yql?"
-    #result = req.get("result")
-    #parameters = result.get("parameters")
+    result = req.get("result")
+    parameters = result.get("parameters")
     #import ipgetter
     #import requests
 
