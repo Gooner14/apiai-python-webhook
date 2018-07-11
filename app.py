@@ -229,7 +229,8 @@ def makeWebhookResult2(data,city,flag):
         location = channel.get('location')
         print(json.dumps(item, indent=4))
         astronomy= channel.get('astronomy')             
-        speech = "Time of sunrise in "+location.get('city')+" is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset')        
+        speech = "Time of sunrise in "+location.get('city')+" is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset') 
+        print(speech)       
     print("Response:")
     print(speech)
     
