@@ -5,6 +5,8 @@ import json
 import os
 import requests
 import geocoder
+import urllib.request
+
 
 from flask import Flask
 from flask import request
@@ -17,16 +19,7 @@ app = Flask(__name__)
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    print("Ip adress: ")
-    print(request.environ['REMOTE_ADDR'])
-    print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
-    print(request.remote_addr)
-    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
-        print(request.environ['REMOTE_ADDR'])
-    else:
-        print(request.environ['HTTP_X_FORWARDED_FOR'])
-    print(requests.get('http://ip.42.pl/raw').text)  
-    
+       
     print("Request:")
     print(json.dumps(req, indent=4))
 
@@ -48,7 +41,7 @@ def processRequest(req):
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
     result = req.get("result")
     parameters = result.get("parameters")
-    #import ipgetter
+    import ipgetter
     #import requests
 
     #IP = ipgetter.myip()
@@ -67,6 +60,21 @@ def processRequest(req):
         """g = geocoder.ip('me')
         print(g.city)
         city=g.city"""
+        print("Ip adress: ")
+        print(request.environ['REMOTE_ADDR'])
+        print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+        print(request.remote_addr)
+        if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+            print(request.environ['REMOTE_ADDR'])
+        else:
+            print(request.environ['HTTP_X_FORWARDED_FOR'])
+        print(requests.get('http://ip.42.pl/raw').text)  
+        client_ip = request.environ.get('REMOTE_ADDR')
+        print('Your IP is: {}\n'.format(client_ip))
+        IP = ipgetter.myip()
+        print(IP)
+        external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+        print(external_ip)
         send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json"
         geo_req = requests.get(send_url)
         geo_json = json.loads(geo_req.text)
