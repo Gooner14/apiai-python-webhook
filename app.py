@@ -17,7 +17,10 @@ app = Flask(__name__)
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-
+    print("Ip adress: ")
+    print(request.environ['REMOTE_ADDR'])
+    print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    print(request.remote_addr)
     print("Request:")
     print(json.dumps(req, indent=4))
 
