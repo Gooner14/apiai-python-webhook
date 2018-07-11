@@ -21,6 +21,12 @@ def webhook():
     print(request.environ['REMOTE_ADDR'])
     print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
     print(request.remote_addr)
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        print(request.environ['REMOTE_ADDR'])
+    else:
+        print(request.environ['HTTP_X_FORWARDED_FOR'])
+    print(requests.get('http://ip.42.pl/raw').text)  
+    
     print("Request:")
     print(json.dumps(req, indent=4))
 
