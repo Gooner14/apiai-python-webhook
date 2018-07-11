@@ -5,7 +5,6 @@ import json
 import os
 import requests
 import geocoder
-import urllib.request
 
 
 from flask import Flask
