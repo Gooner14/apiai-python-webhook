@@ -202,7 +202,7 @@ def makeWebhookResult2(data,city,flag):
         speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
                  ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
         print (speech)         
-    elif flag==0:
+    elif flag==1:
         query = data.get('query')
         if query is None:
             return {}
