@@ -185,24 +185,22 @@ def makeWebhookResult2(data,city,flag):
 
     print("aqi is")
     print(aqi)
+    speech=""
     location = channel.get('location')
-    astronomy= channel.get('astronomy')
-    print(json.dumps(astronomy, indent=4))
-    units = channel.get('units')
-    if (location is None) or (item is None) or (units is None):
-        return {}
-
-    condition = item.get('condition')
-    if condition is None:
-        return {}
-    
-    
-    print(json.dumps(item, indent=4))
-    if flag==1:
+    if flag==0:
+        units = channel.get('units')
+        if (location is None) or (item is None) or (units is None):
+            return {}
+        condition = item.get('condition')
+        if condition is None:
+            return {}
+      
+        print(json.dumps(item, indent=4))
         speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
-    else:
-        speech = "Time of sunrise is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset')        
+                 ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+    elif flag==0:
+        astronomy= channel.get('astronomy')             
+        speech = "Time of sunrise in "+location.get('city')+" is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset')        
     print("Response:")
     print(speech)
     
