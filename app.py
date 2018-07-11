@@ -80,7 +80,7 @@ def processRequest(req):
     print(result)
 
     data = json.loads(result)
-    if flag==1 and len(day) < 3:
+    if flag==1 or len(day) < 3:
         res = makeWebhookResult2(data,city,flag)
     else:
         res = makeWebhookResult1(data,city,flag)
@@ -186,6 +186,8 @@ def makeWebhookResult2(data,city,flag):
     print("aqi is")
     print(aqi)
     speech=""
+    print("flag is")
+    print(flag)
     location = channel.get('location')
     if flag==0:
         units = channel.get('units')
@@ -198,6 +200,7 @@ def makeWebhookResult2(data,city,flag):
         print(json.dumps(item, indent=4))
         speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
                  ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+        print (speech)         
     elif flag==0:
         astronomy= channel.get('astronomy')             
         speech = "Time of sunrise in "+location.get('city')+" is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset')        
