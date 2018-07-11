@@ -69,11 +69,7 @@ def processRequest(req):
             print(request.environ['HTTP_X_FORWARDED_FOR'])
         print(requests.get('http://ip.42.pl/raw').text)  
         client_ip = request.environ.get('REMOTE_ADDR')
-        print('Your IP is: {}\n'.format(client_ip))
-        IP = ipgetter.myip()
-        print(IP)
-        external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
-        print(external_ip)
+
         send_url = "http://api.ipstack.com/check?access_key=e4bc9f0507a494f428e34e9bdad24e95&format=1curl%20freegeoip.net/json"
         geo_req = requests.get(send_url)
         geo_json = json.loads(geo_req.text)
