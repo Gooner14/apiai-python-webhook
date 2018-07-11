@@ -32,8 +32,10 @@ def webhook():
 
 def processRequest(req):
     print ("started processing")
-    if req.get("result").get("action") != "yahooWeatherForecast":
-        return {}
+    if req.get("result").get("action") == "yahooWeatherForecast":
+        flag=0
+    if req.get("result").get("action") == "PollForecast":
+        flag=1    
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
     result = req.get("result")
     parameters = result.get("parameters")
@@ -44,8 +46,11 @@ def processRequest(req):
     #url = 'http://freegeoip.net/json/'+IP
     #r = requests.get(url)
     #js = r.json()
-    city = parameters.get("geo-city")
-    day=parameters.get("dat")
+    if flag==0:
+        city = parameters.get("geo-city")
+        day=parameters.get("dat")
+    if flag==1:  
+        city = parameters.get("geo-city")
     if len(city)<3:
         """newlink = "https://api.ipdata.co/city?api-key=1ad57590c9de8df36fae6f8693b934d2ca8d6228e6f5f5ab8e7cc6b7"
         newf = requests.get(newlink)
@@ -59,10 +64,10 @@ def processRequest(req):
         city = geo_json['city']
         print (city)
     #app.wsgi_app = ProxyFix(app.wsgi_app)    
-    if len(day) <3:
-        yql_query = makeYqlQuery2(req,city)
+    if flag==1 or len(day) <3:
+        yql_query = makeYqlQuery2(req,city,flag)
     else:    
-        yql_query = makeYqlQuery1(req,city)
+        yql_query = makeYqlQuery1(req,city,flag)
     print ("yql query created")
     if yql_query is None:
         print("yqlquery is empty")
@@ -75,14 +80,14 @@ def processRequest(req):
     print(result)
 
     data = json.loads(result)
-    if len(day) < 3:
-        res = makeWebhookResult2(data,city)
+    if flag==1 and len(day) < 3:
+        res = makeWebhookResult2(data,city,flag)
     else:
-        res = makeWebhookResult1(data,city)
+        res = makeWebhookResult1(data,city,flag)
     return res
 
 
-def makeYqlQuery1(req,city):
+def makeYqlQuery1(req,city,flag):
     result = req.get("result")
     parameters = result.get("parameters")
     #city = parameters.get("geo-city")
@@ -95,7 +100,7 @@ def makeYqlQuery1(req,city):
     return "select units,location,title, lastBuildDate,description,ttl,link, wind, atmosphere, astronomy, image, item.link,item.lat,item.long,item.pubDate, item.forecast,item.language, item.title,item.condition,item.description,item.guid from weather.forecast where (woeid in (select woeid from geo.places(1) where text='" + city + "') and item.forecast.day='" + day + "') and u =' c' limit 1"
 
 
-def makeYqlQuery2(req,city):
+def makeYqlQuery2(req,city,flag):
     result = req.get("result")
     parameters = result.get("parameters")
     #city = parameters.get("geo-city")
@@ -104,7 +109,7 @@ def makeYqlQuery2(req,city):
 
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "') and u= ' c'"
 
-def makeWebhookResult1(data,city):
+def makeWebhookResult1(data,city,flag):
     query = data.get('query')
     if query is None:
         return {}
@@ -159,7 +164,7 @@ def pollevel(lati, longi):
     aqi_json = json.loads(aqi_req.text)
     aqi= aqi_json['breezometer_aqi']
     return aqi
-def makeWebhookResult2(data,city):
+def makeWebhookResult2(data,city,flag):
     query = data.get('query')
     if query is None:
         return {}
@@ -181,6 +186,8 @@ def makeWebhookResult2(data,city):
     print("aqi is")
     print(aqi)
     location = channel.get('location')
+    astronomy= channel.get('astronomy')
+    print(json.dumps(astronomy, indent=4))
     units = channel.get('units')
     if (location is None) or (item is None) or (units is None):
         return {}
@@ -191,10 +198,11 @@ def makeWebhookResult2(data,city):
     
     
     print(json.dumps(item, indent=4))
-
-    speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
+    if flag==1:
+        speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
-
+    else:
+        speech = "Time of sunrise is: "+ astronomy.get('sunrise')+" and the time of sunset is " +astronomy.get('sunset')        
     print("Response:")
     print(speech)
     
