@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import sys
 import urllib
 import json
 import os
@@ -149,9 +149,10 @@ def makeWebhookResult1(data,city,flag):
     forecast=item.get('forecast')   
     # print(json.dumps(item, indent=4))
     
-
-    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +" "+units.get('temperature')+ \
-             " and a low of " + forecast.get('low') +" "+ units.get('temperature')
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('UTF8')
+    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +"°"+units.get('temperature')+ \
+             " and a low of " + forecast.get('low') +"°"+ units.get('temperature')
 
     print("Response:")
     print(speech)
@@ -212,7 +213,7 @@ def makeWebhookResult2(data,city,flag):
         
         print(json.dumps(item, indent=4))
         speech = "Today's weather condition in " + location.get('city') + " ("+ forecast.get('date')+ "): " + condition.get('text') + \
-                 ", with a temperature of " + condition.get('temp') + "°" + units.get('temperature')
+                 ", with a temperature of " + condition.get('temp') + " " + units.get('temperature')
         print (speech)         
     elif flag==1:
         query = data.get('query')
