@@ -150,8 +150,8 @@ def makeWebhookResult1(data,city,flag):
     # print(json.dumps(item, indent=4))
     
 
-    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +"°"+units.get('temperature')+ \
-             " and a low of " + forecast.get('low') +"°"+ units.get('temperature')
+    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +" "+units.get('temperature')+ \
+             " and a low of " + forecast.get('low') +" "+ units.get('temperature')
 
     print("Response:")
     print(speech)
