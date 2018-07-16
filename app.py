@@ -148,7 +148,8 @@ def makeWebhookResult1(data,city,flag):
     forecast=item.get('forecast')   
     # print(json.dumps(item, indent=4))
     
-    
+    import os
+    os.environ["PYTHONIOENCODING"] = "utf-8"
 
     speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +"°"+units.get('temperature')+ \
              " and a low of " + forecast.get('low') +"°"+ units.get('temperature')
@@ -209,7 +210,10 @@ def makeWebhookResult2(data,city,flag):
         condition = item.get('condition')
         if condition is None:
             return {}
-      
+        
+        import os
+        os.environ["PYTHONIOENCODING"] = "utf-8"
+        
         print(json.dumps(item, indent=4))
         speech = "Today's weather condition in " + location.get('city') + " ("+ forecast.get('date')+ "): " + condition.get('text') + \
                  ", with a temperature of " + condition.get('temp') + "°" + units.get('temperature')
