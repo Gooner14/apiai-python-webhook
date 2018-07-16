@@ -212,8 +212,11 @@ def makeWebhookResult2(data,city,flag):
             return {}
         
         print(json.dumps(item, indent=4))
-        speech = "Today's weather condition in " + location.get('city') + " ("+ forecast.get('date')+ "): " + condition.get('text') + \
-                 ", with a temperature of " + condition.get('temp') + " " + units.get('temperature')
+        
+        reload(sys)  # Reload does the trick!
+        sys.setdefaultencoding('UTF8')
+        speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
+                 ", with a current temperature of " + condition.get('temp') + "°" + units.get('temperature')
         print (speech)         
     elif flag==1:
         query = data.get('query')
