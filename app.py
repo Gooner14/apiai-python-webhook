@@ -150,8 +150,8 @@ def makeWebhookResult1(data,city,flag):
     
     
 
-    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +" "+units.get('temperature')+ \
-             " and a low of " + forecast.get('low') +" "+ units.get('temperature')
+    speech = "Weather in " + location.get('city') + " on "+ forecast.get('date')+ ": "+forecast.get('text')+", with a high of " + forecast.get('high') +"°"+units.get('temperature')+ \
+             " and a low of " + forecast.get('low') +"°"+ units.get('temperature')
 
     print("Response:")
     print(speech)
@@ -211,8 +211,8 @@ def makeWebhookResult2(data,city,flag):
             return {}
       
         print(json.dumps(item, indent=4))
-        speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
-                 ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+        speech = "Today's weather condition in " + location.get('city') + " ("+ forecast.get('date')+ "): " + condition.get('text') + \
+                 ", with a temperature of " + condition.get('temp') + "°" + units.get('temperature')
         print (speech)         
     elif flag==1:
         query = data.get('query')
